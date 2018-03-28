@@ -14,19 +14,19 @@ namespace EthernalData.Controllers
     public class HomeController : Controller
     {
         private readonly INethereumWeb3Service _nethereumService;
-        private  IEtherScanService _ropstenService;
+        private  IEtherScanAPIService _EtherScanAPIService;
 
         public HomeController(
             INethereumWeb3Service nethereumService,
-            IEtherScanService ropstenService)
+            IEtherScanAPIService etherScanAPIService)
         {
             _nethereumService = nethereumService;
-            _ropstenService = ropstenService;
+            _EtherScanAPIService = etherScanAPIService;
         }
 
         public IActionResult Index()
         {
-            var g =  _ropstenService.GetTransactionsAsync();
+            var g = _EtherScanAPIService.GetTransactionsAsync();
             return View();
         }
 

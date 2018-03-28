@@ -36,7 +36,7 @@ namespace EthernalData
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<INethereumWeb3Service, NethereumWeb3Service>();
-            services.AddTransient<IEtherScanService, EtherScanService>();
+            services.AddTransient<IEtherScanAPIService, EtherScanAPIService>();
             services.AddMvc();
         }
 

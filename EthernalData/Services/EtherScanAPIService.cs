@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace EthernalData.Services
 {
-    public class EtherScanService : IEtherScanService
+    public class EtherScanAPIService : IEtherScanAPIService
     {
 
        public async Task<List<Transaction>> GetTransactionsAsync()
