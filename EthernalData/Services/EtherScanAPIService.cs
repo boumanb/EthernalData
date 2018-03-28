@@ -13,10 +13,13 @@ namespace EthernalData.Services
     public class EtherScanAPIService : IEtherScanAPIService
     {
 
-       public async Task<List<Transaction>> GetTransactionsAsync()
+        private string APIKEY = "EFVIQ2QEQT6NDRH5TF3UKSUVAIKMYF11FV";
+
+
+        public async Task<List<Transaction>> GetTransactionsAsync(string address, int fromBlock, int tillBlock, Sort sort)
         {
             List<Transaction> transactions = new List<Transaction>();
-            string uri = "http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=0xe47FFd7fD16519Bc532F4F73E8993FFfFe0191BE&startblock=0&endblock=99999999&sort=asc&apikey=EFVIQ2QEQT6NDRH5TF3UKSUVAIKMYF11FV";
+            string uri = "http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=" + address + "&startblock=" + fromBlock + "&endblock=" + tillBlock + "&sort=" + sort.ToString() + "&apikey=" + APIKEY;
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync(uri);
             if (response.IsSuccessStatusCode)
@@ -40,5 +43,6 @@ namespace EthernalData.Services
             }
             return transactions;
         }
+        
     }
 }

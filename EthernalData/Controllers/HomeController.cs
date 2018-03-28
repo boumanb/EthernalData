@@ -26,7 +26,7 @@ namespace EthernalData.Controllers
 
         public IActionResult Index()
         {
-            var g = _EtherScanAPIService.GetTransactionsAsync();
+            var g = _EtherScanAPIService.GetTransactionsAsync("0x1Fb65D5a17571433e6fb5e8119251348FEA23140", 2913507, 2913599, Sort.ASC);
             return View();
         }
 
