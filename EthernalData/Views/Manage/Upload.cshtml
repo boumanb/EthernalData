@@ -1,0 +1,249 @@
+﻿
+@{
+    ViewData["Title"] = "Upload";
+    ViewData.AddActivePage(ManageNavPages.Upload);
+}
+
+<h4>@ViewData["Title"]</h4>
+    <div class="row">
+        <div class="text-center">
+            <p>
+                Make sure MetaMask network is set to "Ropsten Test Net"<br/>
+                Need ethers? <a href="http://faucet.ropsten.be:3001/" target="_blank">Ether faucet</a>
+            </p>
+            <p>
+                .JPG and .PNG working. Bigger files require a higher gas price, works fine with files up to 10kB.
+            </p>
+
+        </div>
+        <div class="col-xs-12 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <!-- image-preview-filename input [CUT FROM HERE]-->
+            <div class="input-group image-preview">
+                <input type="text" class="form-control image-preview-filename" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                <span class="input-group-btn">
+                    <!-- image-preview-clear button -->
+                    <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
+                        <span class="glyphicon glyphicon-remove"></span> Clear
+                    </button>
+                    <!-- image-preview-input -->
+                    <div class="btn btn-default image-preview-input">
+                        <span class="glyphicon glyphicon-folder-open"></span>
+                        <span class="image-preview-input-title">Browse</span>
+                        <input type="file" accept="image/png, image/jpeg" id="fileinput" /> <!-- rename it -->
+                    </div>
+                </span>
+            </div><!-- /input-group image-preview [TO HERE]-->
+        </div>
+<script type="text/javascript">
+window.addEventListener('load', function() {
+
+    if (typeof web3 !== 'undefined') {
+        // Use Mist/MetaMask's provider
+        window.web3 = new Web3(web3.currentProvider);
+        web3.version.getNetwork((err, netId) => {
+        	if (netId != '3') {
+        		window.alert("Please set MetaMask to 'Ropsten Test Net'");
+                //web3.eth.getBlockNumber(function(error, result) {
+                //    loadImages(0x1Fb65D5a17571433e6fb5e8119251348FEA23140, 2913521, result);
+                //});
+        	} else if (web3.eth.accounts[0] == undefined) {
+                window.alert("Please login to MetaMask to upload images into the blockchain");
+                //web3.eth.getBlockNumber(function(error, result) {
+                //    loadImages(0x1Fb65D5a17571433e6fb5e8119251348FEA23140, 2913521, result);
+                //});
+            } else {
+        		//web3.eth.getBlockNumber(function(error, result) {
+		        //	loadImages(0x1Fb65D5a17571433e6fb5e8119251348FEA23140, 2913521, result);
+		        //});
+        	}
+        });
+
+
+    } else {
+        window.alert("To upload your own images into the ethereum blockchain you need MetaMask https://metamask.io/")
+        // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+        window.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/8WSOwn09LvBKuJTt4ELJ"));
+        //web3.eth.getBlockNumber(function(error, result) {
+        //	loadImages(0x1Fb65D5a17571433e6fb5e8119251348FEA23140, 2913521, result);
+        //});
+
+    }
+
+});
+	$("document").ready(function(){
+        if (typeof web3 == 'undefined') {
+            window.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/8WSOwn09LvBKuJTt4ELJ"));
+        }
+
+        song = document.getElementById('song');
+        // encodedData = hexToBase64(e.input);
+        //web3.eth.getTransaction("0x24f588c5c914ed17c997772899af9f05a1a0d169e6109ce7506b3bda2dc0d1a8", function(error, result) {
+        //    song.src = "data:audio/mp3;base64," + hexToBase64(result.input.substr(2));
+        //})
+
+
+	    $("#fileinput").change(function() {
+	        input = document.getElementById('fileinput');
+	        if (!input) {
+		      	alert("Um, couldn't find the fileinput element.");
+		    }
+		    else if (!input.files) {
+		      	alert("This browser doesn't seem to support the `files` property of file inputs.");
+		    }
+		    else if (!input.files[0]) {
+		      	alert("Please select a file before clicking 'Load'");
+		    }
+		    else {
+				file = input.files[0];
+	            hexDump(file)
+	            .then(function(hex) {
+	            	web3.eth.estimateGas({
+    					from: web3.eth.accounts[0],
+					    to: "0x1Fb65D5a17571433e6fb5e8119251348FEA23140",
+					    data: hex
+					}, function(error, gasEstimate) {
+						web3.eth.sendTransaction({
+						    from: web3.eth.accounts[0],
+						    to: "0x1Fb65D5a17571433e6fb5e8119251348FEA23140",
+						    data: hex,
+						    gas: gasEstimate
+						}, function (error, result) {
+							if (!error) {
+								console.log(result);
+							}
+						})
+					});
+
+	            })
+		    }
+	    });
+	});
+
+	function hexDump(file) {
+	  return new Promise((res, rej) => {
+	    if (!(file instanceof Blob)) rej('wrong input');
+	    const reader = new FileReader();
+	    reader.onload = e => {
+	      res(hex(reader.result));
+	    };
+	    reader.onerror = e => rej('error while reading');
+	    reader.readAsBinaryString(file);
+	 })};
+
+	  // gotten from https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#Example
+	  function hex(buffer) {
+	    return web3.toHex(buffer);
+	}
+
+	function hexToBase64(hexstring) {
+	    return btoa(hexstring.match(/\w{2}/g).map(function(a) {
+	        return String.fromCharCode(parseInt(a, 16));
+	    }).join(""));
+	}
+
+
+
+	function loadImages(accAddress, startBlockNumber, endBlockNumber) {
+	  // You can do a NULL check for the start/end blockNumber
+	  let count = 0;
+
+
+	  for (var i = startBlockNumber; i <= endBlockNumber; i++) {
+
+	    var block = web3.eth.getBlock(i, true, function(error, block) {
+	    	if (block != null && block.transactions != null) {
+		      block.transactions.forEach( function(e, txid) {
+		        if (accAddress == "*" || accAddress == e.from || accAddress == e.to) {
+		          	if (hexToBase64(e.input.substr(2)).slice(0,3) != "SUQ") {
+                        displayImage(e, count);
+                        count++;
+                    }                
+		        }
+		      })
+		  }
+	    });
+	  }
+	}
+
+	function displayImage(image, count) {
+		if (count == 0) {
+			linkHref = document.getElementById('tx-link');
+          	linkHref.href = "https://ropsten.etherscan.io/tx/" + image.hash;
+          	img = document.getElementById('img');
+          	encodedData = hexToBase64(image.input.substr(2));
+          	// encodedData = hexToBase64(e.input);
+          	img.src = "data:image/jpg;base64," + encodedData;
+        } else {
+        	setTimeout(function() {
+		        	linkHref = document.getElementById('tx-link');
+		          	linkHref.href = "https://ropsten.etherscan.io/tx/" + image.hash;
+		          	img = document.getElementById('img');
+		          	encodedData = hexToBase64(image.input.substr(2));
+		          	// encodedData = hexToBase64(e.input);
+		          	img.src = "data:image/jpg;base64," + encodedData;
+		    }, count * 3000);
+        }
+    }
+
+    </script>
+    <script type="text/javascript">
+	$(document).on('click', '#close-preview', function(){
+    $('.image-preview').popover('hide');
+    // Hover befor close the preview
+    $('.image-preview').hover(
+        function () {
+           $('.image-preview').popover('show');
+        },
+         function () {
+           $('.image-preview').popover('hide');
+        }
+    );
+});
+
+$(function() {
+    // Create the close button
+    var closebtn = $('<button/>', {
+        type:"button",
+        text: 'x',
+        id: 'close-preview',
+        style: 'font-size: initial;',
+    });
+    closebtn.attr("class","close pull-right");
+    // Set the popover default content
+    $('.image-preview').popover({
+        trigger:'manual',
+        html:true,
+        title: "<strong>Preview</strong>"+$(closebtn)[0].outerHTML,
+        content: "There's no image",
+        placement:'bottom'
+    });
+    // Clear event
+    $('.image-preview-clear').click(function(){
+        $('.image-preview').attr("data-content","").popover('hide');
+        $('.image-preview-filename').val("");
+        $('.image-preview-clear').hide();
+        $('.image-preview-input input:file').val("");
+        $(".image-preview-input-title").text("Browse");
+    });
+    // Create the preview image
+    $(".image-preview-input input:file").change(function (){
+        var img = $('<img/>', {
+            id: 'dynamic',
+            width:250,
+            height:200
+        });
+        var file = this.files[0];
+        var reader = new FileReader();
+        // Set preview image into the popover data-content
+        reader.onload = function (e) {
+            $(".image-preview-input-title").text("Change");
+            $(".image-preview-clear").show();
+            $(".image-preview-filename").val(file.name);
+            img.attr('src', e.target.result);
+            $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
+        }
+        reader.readAsDataURL(file);
+    });
+});
+</script>
+</div>

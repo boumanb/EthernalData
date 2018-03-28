@@ -83,27 +83,20 @@ namespace EthernalData.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var email = user.Email;
-            if (model.Email != email)
-            {
-                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
-                if (!setEmailResult.Succeeded)
-                {
-                    throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
-                }
-            }
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+            user.ETHAddress = model.ETHAddress;
 
-            var phoneNumber = user.PhoneNumber;
-            if (model.PhoneNumber != phoneNumber)
+            var userUpdate = await _userManager.UpdateAsync(user);
+            if (userUpdate.Succeeded)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
-                }
-            }
+                StatusMessage = "Your profile has been updated";
+            } 
+            else
+            {
+                StatusMessage = "Error: something went wrong";
+            }                                  
             
-            StatusMessage = "Your profile has been updated";
             return RedirectToAction(nameof(Index));
         }
 
@@ -490,6 +483,12 @@ namespace EthernalData.Controllers
             var model = new ShowRecoveryCodesViewModel { RecoveryCodes = recoveryCodes.ToArray() };
 
             return View(nameof(ShowRecoveryCodes), model);
+        }
+
+        [HttpGet]
+        public IActionResult Upload()
+        {
+            return View();
         }
 
         #region Helpers
