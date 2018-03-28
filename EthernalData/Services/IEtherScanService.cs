@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EthernalData.Services
 {
-    public interface IRopstenService
+    public interface IEtherScanService
     {
         Task<List<Transaction>> GetTransactionsAsync();
     }

@@ -14,11 +14,11 @@ namespace EthernalData.Controllers
     public class HomeController : Controller
     {
         private readonly INethereumWeb3Service _nethereumService;
-        private  IRopstenService _ropstenService;
+        private  IEtherScanService _ropstenService;
 
         public HomeController(
             INethereumWeb3Service nethereumService,
-            IRopstenService ropstenService)
+            IEtherScanService ropstenService)
         {
             _nethereumService = nethereumService;
             _ropstenService = ropstenService;
