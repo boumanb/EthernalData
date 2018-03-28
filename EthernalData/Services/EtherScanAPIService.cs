@@ -28,9 +28,9 @@ namespace EthernalData.Services
                 {
                     string result = await response.Content.ReadAsStringAsync();
                     ESTransactionsResult eSTransactionsResult = JsonConvert.DeserializeObject<ESTransactionsResult>(result);
-                    Debug.WriteLine(eSTransactionsResult.transactions[0].blockNumber);
-                    Debug.WriteLine(eSTransactionsResult.transactions[1].input);
-                    Debug.WriteLine(eSTransactionsResult.transactions[1].HexString2B64String(eSTransactionsResult.transactions[1].input));
+                    Debug.WriteLine(eSTransactionsResult.transactions[0].BlockNumber);
+                    Debug.WriteLine(eSTransactionsResult.transactions[1].Input);
+                    Debug.WriteLine(eSTransactionsResult.transactions[1].HexString2B64String(eSTransactionsResult.transactions[1].Input));
                 }
                 catch (JsonSerializationException ex)
                 {

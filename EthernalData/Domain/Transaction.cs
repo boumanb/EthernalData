@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace EthernalData.Domain
 {
-    public class Transaction
+    public class Transaction : Nethereum.RPC.Eth.DTOs.Transaction
     {
-        public int blockNumber;
-        public string input;
 
         public static byte[] StringToByteArray(string hex)
         {
