@@ -28,7 +28,7 @@ namespace EthernalData.Services
 
                 blockWithTransactionsTask.Wait();
 
-                if (blockWithTransactionsTask != null)
+                if (blockWithTransactionsTask.Result != null)
                 {
                     foreach (Transaction transaction in blockWithTransactionsTask.Result.Transactions)
                     {
