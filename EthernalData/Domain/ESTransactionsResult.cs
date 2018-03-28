@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EthernalData.Domain
 {
-    public class RootObject
+    public class ESTransactionsResult
     {
         public int status;
         public string message;

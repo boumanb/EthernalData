@@ -27,10 +27,10 @@ namespace EthernalData.Services
                 try
                 {
                     string result = await response.Content.ReadAsStringAsync();
-                    RootObject root = JsonConvert.DeserializeObject<RootObject>(result);
-                    Debug.WriteLine(root.transactions[0].blockNumber);
-                    Debug.WriteLine(root.transactions[1].input);
-                    Debug.WriteLine(root.transactions[1].HexString2B64String(root.transactions[1].input));
+                    ESTransactionsResult eSTransactionsResult = JsonConvert.DeserializeObject<ESTransactionsResult>(result);
+                    Debug.WriteLine(eSTransactionsResult.transactions[0].blockNumber);
+                    Debug.WriteLine(eSTransactionsResult.transactions[1].input);
+                    Debug.WriteLine(eSTransactionsResult.transactions[1].HexString2B64String(eSTransactionsResult.transactions[1].input));
                 }
                 catch (JsonSerializationException ex)
                 {
