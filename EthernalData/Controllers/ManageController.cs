@@ -103,6 +103,8 @@ namespace EthernalData.Controllers
                 }
             }
             
+            StatusMessage = "Your profile has been updated";
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
