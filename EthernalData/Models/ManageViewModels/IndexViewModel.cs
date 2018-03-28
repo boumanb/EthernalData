@@ -16,6 +16,9 @@ namespace EthernalData.Models.ManageViewModels
         [EmailAddress]
         public string Email { get; set; }
 
+        [Required]
+        public string ETHAddress { get; set; }
+
         [Phone]
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }

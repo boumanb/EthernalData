@@ -59,6 +59,7 @@ namespace EthernalData.Controllers
             {
                 Username = user.UserName,
                 Email = user.Email,
+                ETHAddress = user.ETHAddress,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = StatusMessage
@@ -101,9 +102,7 @@ namespace EthernalData.Controllers
                     throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
                 }
             }
-
-            StatusMessage = "Your profile has been updated";
-            return RedirectToAction(nameof(Index));
+            
         }
 
         [HttpPost]
