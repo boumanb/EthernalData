@@ -6,32 +6,38 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EthernalData.Models;
 using EthernalData.Services;
+using Nethereum.RPC.Eth.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EthernalData.Controllers
 {
     public class HomeController : Controller
     {
         private readonly INethereumWeb3Service _nethereumService;
+        private  IRopstenService _ropstenService;
 
         public HomeController(
-            INethereumWeb3Service nethereumService)
+            INethereumWeb3Service nethereumService,
+            IRopstenService ropstenService)
         {
             _nethereumService = nethereumService;
+            _ropstenService = ropstenService;
         }
 
         public IActionResult Index()
         {
+            var g =  _ropstenService.GetTransactionsAsync();
             return View();
         }
 
         public IActionResult About()
         {
             
-            var list = _nethereumService.GetTransactionsByAddress("0x1fb65d5a17571433e6fb5e8119251348fea23140", 2913521, 2913600);
+            LinkedList<Transaction> list = _nethereumService.GetTransactionsByAddress("0xfB40701afA82e807A7dE7C112D3f26A4361b8A29", 5085560, 5085570);
             Console.WriteLine(list.Count);
-            ViewData["Message"] = list.First.Value.TransactionHash;
+       
 
-            return View();
+            return View(list);
         }
 
         public IActionResult Contact()

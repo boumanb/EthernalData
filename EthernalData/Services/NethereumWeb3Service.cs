@@ -15,6 +15,7 @@ namespace EthernalData.Services
         {
             Web3 = new Web3("https://ropsten.infura.io/8WSOwn09LvBKuJTt4EL");
         }
+      
 
         public LinkedList<Transaction> GetTransactionsByAddress(string address, int fromBlock, int tillBlock)
         {
@@ -22,16 +23,19 @@ namespace EthernalData.Services
 
             for (int i = fromBlock; i < tillBlock; i++)
             {
-
-                var blockWithTransactionsTask = Web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(new BlockParameter((ulong) i));
+            
+                var blockWithTransactionsTask = Web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(new BlockParameter((ulong)i));
 
                 blockWithTransactionsTask.Wait();
 
-                foreach(Transaction transaction in blockWithTransactionsTask.Result.Transactions)
+                if (blockWithTransactionsTask != null)
                 {
-                    if(transaction.From == address || transaction.To == address)
+                    foreach (Transaction transaction in blockWithTransactionsTask.Result.Transactions)
                     {
-                        transactionList.AddLast(transaction);
+                        if (transaction.From == address || transaction.To == address)
+                        {
+                            transactionList.AddLast(transaction);
+                        }
                     }
                 }
             }

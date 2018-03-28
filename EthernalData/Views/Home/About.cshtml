@@ -1,7 +1,21 @@
-﻿@{
+﻿@model LinkedList<Nethereum.RPC.Eth.DTOs.Transaction>
+
+@{
     ViewData["Title"] = "About";
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Transacties</th>
+        </tr>
+    </thead>
+    <tbody>
+     @foreach (Nethereum.RPC.Eth.DTOs.Transaction t in @Model) {
+        <tr>
+            <td>@t.TransactionHash</td>
+        </tr>
+    }
+        </tbody>
+    </table>
 
 <p>Use this area to provide additional information.</p>
