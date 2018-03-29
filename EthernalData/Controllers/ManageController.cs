@@ -485,12 +485,6 @@ namespace EthernalData.Controllers
             return View(nameof(ShowRecoveryCodes), model);
         }
 
-        [HttpGet]
-        public IActionResult Upload()
-        {
-            return View();
-        }
-
         #region Helpers
 
         private void AddErrors(IdentityResult result)
