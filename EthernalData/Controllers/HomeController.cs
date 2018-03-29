@@ -42,8 +42,7 @@ namespace EthernalData.Controllers
      
         public async Task<IActionResult> ImageOverview()
         {
-            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-            ApplicationUser user = await _userManager.GetUserAsync(currentUser);
+            var user = await _userManager.GetUserAsync(User);
             List<Domain.Transaction> transactions = await _EtherScanAPIService.GetTransactionsAsync(user.ETHAddress, 2913507, 4300000, Sort.ASC);
             if (user != null)
             {
@@ -79,7 +78,7 @@ namespace EthernalData.Controllers
             if (!ModelState.IsValid)
             {
                 return View(model);
-            }
+            }           
 
             model.Transaction = await _nethereumService.GetTransactionByHashAsync(model.TXHash.Trim());
             if (model.Transaction.BlockHash == null)
