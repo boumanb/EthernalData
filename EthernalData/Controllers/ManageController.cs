@@ -485,17 +485,6 @@ namespace EthernalData.Controllers
             return View(nameof(ShowRecoveryCodes), model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Upload()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            var model = new UploadViewModel
-            {
-                ETHAddress = user.ETHAddress
-            };
-            return View(model);
-        }
-
         #region Helpers
 
         private void AddErrors(IdentityResult result)

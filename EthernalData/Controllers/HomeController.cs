@@ -8,28 +8,37 @@ using EthernalData.Models;
 using EthernalData.Services;
 using Nethereum.RPC.Eth.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using EthernalData.Models.ManageViewModels;
 
 namespace EthernalData.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly INethereumWeb3Service _nethereumService;
-        private  IEtherScanAPIService _EtherScanAPIService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEtherScanAPIService _EtherScanAPIService;
+
 
         public HomeController(
             INethereumWeb3Service nethereumService,
-            IEtherScanAPIService etherScanAPIService)
+            IEtherScanAPIService etherScanAPIService,
+            UserManager<ApplicationUser> userManager)
         {
             _nethereumService = nethereumService;
             _EtherScanAPIService = etherScanAPIService;
+            _userManager = userManager;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var g = _EtherScanAPIService.GetTransactionsAsync("0x1Fb65D5a17571433e6fb5e8119251348FEA23140", 2913507, 2913599, Sort.ASC);
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult About()
         {
             
@@ -40,11 +49,24 @@ namespace EthernalData.Controllers
             return View(list);
         }
 
+        [AllowAnonymous]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
 
             return View();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Upload()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var model = new UploadViewModel
+            {
+                ETHAddress = user.ETHAddress
+            };
+            return View(model);
         }
 
         public IActionResult Error()
