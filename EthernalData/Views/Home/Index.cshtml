@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<EthernalData.Domain.Transaction>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -64,3 +66,55 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
+
+<div class="row">
+        @foreach (EthernalData.Domain.Transaction t in @Model)
+        {
+            if (t.Input.Length > 10)
+            {
+<div class="col-lg-3 col-md-3">
+    <a data-fancybox="gallery" class="fancybox" id="@t.TransactionHash"></a>
+</div>
+            }
+
+
+        }
+    </div>
+
+
+<script>
+    $(document).ready(function () {
+        displayImage()
+        $('.fancybox').fancybox();;
+
+    });
+
+    function hexToBase64(hexstring) {
+        return btoa(hexstring.match(/\w{2}/g).map(function (a) {
+            return String.fromCharCode(parseInt(a, 16));
+        }).join(""));
+    }
+    function displayImage() {
+       @foreach (var t in @Model ) {
+        <text>
+        var img = document.createElement("img");
+        var a = document.getElementById("@t.TransactionHash");
+        var att = document.createAttribute("href");
+        var att1 = document.createAttribute("class");
+        att1.value = "img-responsive";
+        img.setAttributeNode(att1);
+        var e = "@t.Input";
+        var f = e.substr(2);
+        console.log(f.length);
+        if (f.length > 0) {
+            encodedData = hexToBase64(f);
+            img.src = "data:image/jpg;base64," + encodedData
+            att.value  = "data:image/jpg;base64," + encodedData;
+            a.setAttributeNode(att);
+            var parent = document.getElementById("@t.TransactionHash");
+            parent.appendChild(img);
+        }
+           </text>
+            }
+        }
+</script>

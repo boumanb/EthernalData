@@ -12,6 +12,6 @@ namespace EthernalData.Domain
         public int status;
         public string message;
         [JsonProperty("result")]
-        public Transaction[] transactions;
+        public List<Transaction> transactions;
     }
 }
