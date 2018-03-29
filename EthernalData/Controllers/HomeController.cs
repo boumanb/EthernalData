@@ -17,6 +17,7 @@ namespace EthernalData.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+       
         private readonly INethereumWeb3Service _nethereumService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEtherScanAPIService _EtherScanAPIService;
@@ -35,15 +36,20 @@ namespace EthernalData.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            var g = _EtherScanAPIService.GetTransactionsAsync("0x1Fb65D5a17571433e6fb5e8119251348FEA23140", 2913507, 2913599, Sort.ASC);
             return View();
         }
 
-        [AllowAnonymous]
-        public IActionResult About()
+     
+        public async Task<IActionResult> ImageOverview()
         {
-    
-            var transactions = _nethereumService.GetTransactionsByAddress("0xfB40701afA82e807A7dE7C112D3f26A4361b8A29", 5085560, 5085570);    
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            ApplicationUser user = await _userManager.GetUserAsync(currentUser);
+            List<Domain.Transaction> transactions = await _EtherScanAPIService.GetTransactionsAsync(user.ETHAddress, 2913507, 4300000, Sort.ASC);
+            if (user != null)
+            {
+                Debug.WriteLine(user.ETHAddress);
+            }
+
             return View(transactions);
         }
 

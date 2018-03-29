@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Diagnostics;
+using EthernalData.Converters;
 
 namespace EthernalData.Services
 {
@@ -17,6 +18,7 @@ namespace EthernalData.Services
 
         public async Task<List<Transaction>> GetTransactionsAsync(string address, int fromBlock, int tillBlock, Sort sort)
         {
+            RequestInputConverter converter = new RequestInputConverter();
             List<Transaction> transactions = new List<Transaction>();
             string uri = "http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=" + address + "&startblock=" + fromBlock + "&endblock=" + tillBlock + "&sort=" + sort.ToString() + "&apikey=" + APIKEY;
             HttpClient client = new HttpClient();
@@ -27,9 +29,17 @@ namespace EthernalData.Services
                 {
                     string result = await response.Content.ReadAsStringAsync();
                     ESTransactionsResult eSTransactionsResult = JsonConvert.DeserializeObject<ESTransactionsResult>(result);
-                    Debug.WriteLine(eSTransactionsResult.transactions[0].BlockNumber);
-                    Debug.WriteLine(eSTransactionsResult.transactions[1].Input);
-                    Debug.WriteLine(eSTransactionsResult.transactions[1].HexString2B64String(eSTransactionsResult.transactions[1].Input));
+                    //Debug.WriteLine(eSTransactionsResult.transactions[0].BlockNumber);
+                    //Debug.WriteLine(eSTransactionsResult.transactions[1].Input);
+                    //Debug.WriteLine(eSTransactionsResult.transactions[1].HexString2B64String(eSTransactionsResult.transactions[1].Input));
+                    foreach (Domain.Transaction t in eSTransactionsResult.transactions)
+                    {
+                        string base64 = converter.HexString2B64String(t.Input);
+                        Debug.WriteLine(base64);
+                        t.setBase64(base64);
+                     //   t.setBase64(t.HexString2B64String(t.Input)); <-- dit werkt niet? 
+                        transactions.Add(t);
+                    }
                 }
                 catch (JsonSerializationException ex)
                 {

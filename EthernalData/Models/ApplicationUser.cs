@@ -10,5 +10,6 @@ namespace EthernalData.Models
     public class ApplicationUser : IdentityUser
     {
         public string ETHAddress { get; set; }
+        
     }
 }

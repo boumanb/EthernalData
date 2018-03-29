@@ -4,36 +4,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+
+
 namespace EthernalData.Domain
 {
     public class Transaction : Nethereum.RPC.Eth.DTOs.Transaction
     {
+        public string base64;
 
-        public static byte[] StringToByteArray(string hex)
+
+
+        public void setBase64(string base64)
         {
-            string newHex = hex.Remove(0, 2);
-            Debug.WriteLine(newHex);
-            return Enumerable.Range(0, newHex.Length)
-                             .Where(x => x % 2 == 0)
-                             .Select(x => Convert.ToByte(newHex.Substring(x, 2), 16))
-                             .ToArray();
+            this.base64 = base64;
         }
-
-        public string HexString2B64String(string input)
-        {
-            string result = "";
-        
-            try
-            {
-                result = System.Convert.ToBase64String(StringToByteArray(input));
-
-            }
-            catch (System.FormatException x)
-            {
-                Debug.WriteLine(x.Message);
-            }
-            return result;
-
-        }
+   
     }
 }

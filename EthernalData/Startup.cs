@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using EthernalData.Data;
 using EthernalData.Models;
 using EthernalData.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace EthernalData
 {
@@ -32,6 +33,8 @@ namespace EthernalData
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
