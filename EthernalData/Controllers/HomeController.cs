@@ -10,6 +10,7 @@ using Nethereum.RPC.Eth.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using EthernalData.Models.ManageViewModels;
+using EthernalData.Models.HomeViewModels;
 
 namespace EthernalData.Controllers
 {
@@ -29,7 +30,7 @@ namespace EthernalData.Controllers
             _nethereumService = nethereumService;
             _EtherScanAPIService = etherScanAPIService;
             _userManager = userManager;
-        }
+        }       
 
         [AllowAnonymous]
         public IActionResult Index()
@@ -41,20 +42,9 @@ namespace EthernalData.Controllers
         [AllowAnonymous]
         public IActionResult About()
         {
-            
-            LinkedList<Transaction> list = _nethereumService.GetTransactionsByAddress("0xfB40701afA82e807A7dE7C112D3f26A4361b8A29", 5085560, 5085570);
-            Console.WriteLine(list.Count);
-       
-
-            return View(list);
-        }
-
-        [AllowAnonymous]
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
+    
+            var transactions = _nethereumService.GetTransactionsByAddress("0xfB40701afA82e807A7dE7C112D3f26A4361b8A29", 5085560, 5085570);    
+            return View(transactions);
         }
 
         [Authorize]
@@ -66,6 +56,35 @@ namespace EthernalData.Controllers
             {
                 ETHAddress = user.ETHAddress
             };
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult CheckTransaction()
+        {            
+            return View(new CheckTransactionViewModel());
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CheckTransaction(CheckTransactionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            model.Transaction = await _nethereumService.GetTransactionByHashAsync(model.TXHash.Trim());
+            if (model.Transaction.BlockHash == null)
+            {
+                model.StatusMessage = "Error: Something went wrong. Is the transaction hash valid?";
+            } else
+            {
+                model.StatusMessage = "Retrieved transaction";
+                model.HasTransaction = true;
+            }
+
             return View(model);
         }
 

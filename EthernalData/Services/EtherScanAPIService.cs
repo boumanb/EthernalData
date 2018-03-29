@@ -15,7 +15,6 @@ namespace EthernalData.Services
 
         private string APIKEY = "EFVIQ2QEQT6NDRH5TF3UKSUVAIKMYF11FV";
 
-
         public async Task<List<Transaction>> GetTransactionsAsync(string address, int fromBlock, int tillBlock, Sort sort)
         {
             List<Transaction> transactions = new List<Transaction>();
@@ -36,13 +35,12 @@ namespace EthernalData.Services
                 {
                     Debug.WriteLine(ex.Message);
                 }
-                catch (JsonReaderException x)
+                catch (JsonReaderException ex)
                 {
-                    Debug.WriteLine(x.Message);
+                    Debug.WriteLine(ex.Message);
                 }
             }
             return transactions;
-        }
-        
+        }      
     }
 }

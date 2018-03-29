@@ -8,6 +8,7 @@ namespace EthernalData.Services
 {
     public interface INethereumWeb3Service
     {
-        LinkedList<Transaction> GetTransactionsByAddress(string address, int fromBlock, int tillBlock);
+        Task<LinkedList<Transaction>> GetTransactionsByAddress(string address, int fromBlock, int tillBlock);
+        Task<Transaction> GetTransactionByHashAsync(string txHash);
     }
 }

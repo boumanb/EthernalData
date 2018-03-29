@@ -1,0 +1,30 @@
+﻿@model EthernalData.Models.HomeViewModels.CheckTransactionViewModel
+
+@{
+    ViewData["Title"] = "CheckTransaction";
+}
+
+<h2>CheckTransaction</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CheckTransaction">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TXHash" class="control-label"></label>
+                <input asp-for="TXHash" class="form-control" />
+                <span asp-validation-for="TXHash" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Check transaction" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+@if(Model.HasTransaction)
+{
+    <div>
+        <img src="data:image/png;base64,@Html.Raw(Model.HexString2B64String(Model.Transaction.Input))" />
+    </div>
+}
