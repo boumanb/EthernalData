@@ -8,12 +8,8 @@ using EthernalData.Models;
 using EthernalData.Services;
 using Nethereum.RPC.Eth.DTOs;
 using Microsoft.AspNetCore.Authorization;
-<<<<<<< HEAD
-using EthernalData.Data;
-=======
 using Microsoft.AspNetCore.Identity;
 using EthernalData.Models.ManageViewModels;
->>>>>>> af41eefda45d626fda9ea0bd1ed4ea3d3b4cf2fe
 
 namespace EthernalData.Controllers
 {
@@ -36,24 +32,24 @@ namespace EthernalData.Controllers
             _userManager = userManager;
         }
 
-<<<<<<< HEAD
-        public async Task<IActionResult> Index()
-=======
         [AllowAnonymous]
         public IActionResult Index()
->>>>>>> af41eefda45d626fda9ea0bd1ed4ea3d3b4cf2fe
         {
-           List<Domain.Transaction> transactions = await _EtherScanAPIService.GetTransactionsAsync("0x1Fb65D5a17571433e6fb5e8119251348FEA23140", 2913507, 2913599, Sort.ASC);
-            return View(transactions);
+            return View();
         }
 
-        [AllowAnonymous]
-        public IActionResult About()
+     
+        public async Task<IActionResult> ImageOverview()
         {
-            LinkedList<Transaction> list = _nethereumService.GetTransactionsByAddress("0xfB40701afA82e807A7dE7C112D3f26A4361b8A29", 5085560, 5085570);
-            Console.WriteLine(list.Count);
-            
-            return View(list);
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            ApplicationUser user = await _userManager.GetUserAsync(currentUser);
+            List<Domain.Transaction> transactions = await _EtherScanAPIService.GetTransactionsAsync(user.ETHAddress, 2913507, 4300000, Sort.ASC);
+            if (user != null)
+            {
+                Debug.WriteLine(user.ETHAddress);
+            }
+
+            return View(transactions);
         }
 
         [AllowAnonymous]
