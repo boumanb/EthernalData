@@ -486,9 +486,14 @@ namespace EthernalData.Controllers
         }
 
         [HttpGet]
-        public IActionResult Upload()
+        public async Task<IActionResult> Upload()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            var model = new UploadViewModel
+            {
+                ETHAddress = user.ETHAddress
+            };
+            return View(model);
         }
 
         #region Helpers

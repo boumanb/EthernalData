@@ -1,4 +1,4 @@
-﻿
+﻿@model UploadViewModel
 @{
     ViewData["Title"] = "Upload";
     ViewData.AddActivePage(ManageNavPages.Upload);
@@ -99,12 +99,12 @@ window.addEventListener('load', function() {
 	            .then(function(hex) {
 	            	web3.eth.estimateGas({
     					from: web3.eth.accounts[0],
-					    to: "0x1Fb65D5a17571433e6fb5e8119251348FEA23140",
+					    to: "@Html.Raw(Model.ETHAddress)",
 					    data: hex
 					}, function(error, gasEstimate) {
 						web3.eth.sendTransaction({
 						    from: web3.eth.accounts[0],
-						    to: "0x1Fb65D5a17571433e6fb5e8119251348FEA23140",
+						    to: "@Html.Raw(Model.ETHAddress)",
 						    data: hex,
 						    gas: gasEstimate
 						}, function (error, result) {
