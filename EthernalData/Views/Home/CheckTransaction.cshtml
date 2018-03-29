@@ -1,4 +1,5 @@
 ﻿@model EthernalData.Models.HomeViewModels.CheckTransactionViewModel
+@using EthernalData.Converters
 
 @{
     ViewData["Title"] = "CheckTransaction";
@@ -24,7 +25,8 @@
 </div>
 @if(Model.HasTransaction)
 {
+    string base64 = RequestInputConverter.HexString2B64String(Model.Transaction.Input);
     <div>
-        <img src="data:image/png;base64,@Html.Raw(Model.HexString2B64String(Model.Transaction.Input))" />
+        <img src="data:image/png;base64,@Html.Raw(base64)" />
     </div>
 }
