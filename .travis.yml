@@ -4,4 +4,6 @@ mono: none
 dotnet: 2.0.0
 install:
   - sudo apt-get install -y gtk-sharp2
-  - nuget restore EthernalData.sln
+script: 
+  - dotnet restore
+  - dotnet build
