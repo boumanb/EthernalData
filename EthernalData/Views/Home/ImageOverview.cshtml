@@ -4,23 +4,29 @@
 @{
     ViewData["Title"] = "Image overview";
 }
+<div class="imageoverview">
+    <div class="row">
 
-<div class="row">
-    @foreach (EthernalData.Domain.Transaction t in @Model)
-    {
-        if (t.Input.Length > 10)
-        {
-            <div class="col-lg-3 col-md-3">
+       
+ @foreach (EthernalData.Domain.Transaction t in @Model)
+ {
+     if (t.Input.Length > 10)
+     {
+        <div class="col-sm-6 col-md-4 col-lg-3 mt-4">
+            <div class="card">
                 <a data-fancybox="gallery" class="fancybox" id="@t.TransactionHash"></a>
+                <div class="card-block">
+                    <h4 class="card-title text-center">@t.Gas.Value</h4>
+                </div>
+            </div>
             </div>
         }
+ }
+        </div>
+    </div>
 
 
-    }
-</div>
-
-
-<script>
+            <script>
     $(document).ready(function () {
         displayImage()
         $('.fancybox').fancybox();;
@@ -39,8 +45,9 @@
         var a = document.getElementById("@t.TransactionHash");
         var att = document.createAttribute("href");
         var att1 = document.createAttribute("class");
-        att1.value = "img-responsive";
+        att1.value = "img-responsive card-img-top";
         img.setAttributeNode(att1);
+
         var e = "@t.Input";
         var f = e.substr(2);
         console.log(f.length);
@@ -51,8 +58,9 @@
             a.setAttributeNode(att);
             var parent = document.getElementById("@t.TransactionHash");
             parent.appendChild(img);
+
         }
            </text>
             }
         }
-</script>
+            </script>

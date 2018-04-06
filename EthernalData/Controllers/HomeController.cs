@@ -33,7 +33,7 @@ namespace EthernalData.Controllers
             _userManager = userManager;
         }       
 
-        [AllowAnonymous]
+        [Authorize]
         public IActionResult Index()
         {
             return View();
