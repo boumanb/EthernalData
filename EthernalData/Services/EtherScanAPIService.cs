@@ -16,9 +16,9 @@ namespace EthernalData.Services
 
         private string APIKEY = "EFVIQ2QEQT6NDRH5TF3UKSUVAIKMYF11FV";
 
-        public async Task<List<Transaction>> GetTransactionsAsync(string address, int fromBlock, int tillBlock, Sort sort)
+        public async Task<IQueryable<Transaction>> GetTransactionsAsync(string address, int fromBlock, int tillBlock, Sort sort)
         {            
-            List<Transaction> transactions = new List<Transaction>();
+            List<Domain.Transaction> transactions = new List<Transaction>();
             string uri = "http://api-ropsten.etherscan.io/api?module=account&action=txlist&address=" + address + "&startblock=" + fromBlock + "&endblock=" + tillBlock + "&sort=" + sort.ToString() + "&apikey=" + APIKEY;
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync(uri);
@@ -49,7 +49,7 @@ namespace EthernalData.Services
                     Debug.WriteLine(ex.Message);
                 }
             }
-            return transactions;
+            return transactions.AsQueryable();
         }      
     }
 }

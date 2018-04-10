@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Identity;
 using EthernalData.Models.ManageViewModels;
 using EthernalData.Models.HomeViewModels;
 
+using EthernalData.Converters;
+
 namespace EthernalData.Controllers
 {
     [Authorize]
@@ -40,16 +42,36 @@ namespace EthernalData.Controllers
         }
 
      
-        public async Task<IActionResult> ImageOverview()
+        public async Task<IActionResult> ImageOverview(string searchString, string currentFilter, int? page)
         {
             var user = await _userManager.GetUserAsync(User);
-            List<Domain.Transaction> transactions = await _EtherScanAPIService.GetTransactionsAsync(user.ETHAddress, 2913507, 4300000, Sort.ASC);
+            IQueryable<Domain.Transaction> transactions = await _EtherScanAPIService.GetTransactionsAsync(user.ETHAddress, 2913507, 4300000, Sort.ASC);
+
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                transactions = transactions.Where(s => s.BlockNumber.Value.ToString().Contains(searchString)
+                                       || s.Nonce.Value.ToString().Contains(searchString)).AsQueryable();
+            }
+
             if (user != null)
             {
                 Debug.WriteLine(user.ETHAddress);
             }
 
-            return View(transactions);
+            int pageSize = 3;
+            return View(await PaginatedList<Domain.Transaction>.CreateAsync(transactions.AsQueryable(), page ?? 1, pageSize));
         }
 
         [Authorize]

@@ -8,7 +8,7 @@ namespace EthernalData.Services
 {
     public interface IEtherScanAPIService
     {
-        Task<List<Transaction>> GetTransactionsAsync(string address, int fromBlock, int tillBlock, Sort sort);
+        Task<IQueryable<Transaction>> GetTransactionsAsync(string address, int fromBlock, int tillBlock, Sort sort);
     }
 
     public sealed class Sort

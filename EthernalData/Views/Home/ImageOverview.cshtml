@@ -1,32 +1,61 @@
-﻿@model List<EthernalData.Domain.Transaction>
-
+﻿@model EthernalData.Converters.PaginatedList<EthernalData.Domain.Transaction>
 
 @{
     ViewData["Title"] = "Image overview";
 }
 <div class="imageoverview">
     <div class="row">
-
-       
- @foreach (EthernalData.Domain.Transaction t in @Model)
- {
-     if (t.Input.Length > 10)
-     {
-        <div class="col-sm-6 col-md-4 col-lg-3 mt-4">
-            <div class="card">
-                <a data-fancybox="gallery" class="fancybox" id="@t.TransactionHash"></a>
-                <div class="card-block">
-                    <h4 class="card-title text-center">@t.Gas.Value</h4>
+        <div class="col-lg-4">
+            <form asp-action="ImageOverview" method="get">
+                <div class="form-actions no-color">
+                    <p>
+                        Find by name: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+                        <input type="submit" value="Search" class="btn btn-default" />
+                        <a asp-action="ImageOverview">Back to Full List</a>
+                    </p>
                 </div>
-            </div>
-            </div>
-        }
- }
+            </form>
         </div>
     </div>
+    <div class="row">
+        @foreach (EthernalData.Domain.Transaction t in @Model)
+        {
+            if (t.Input.Length > 10)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3 mt-4">
+                    <div class="card">
+                        <a data-fancybox="gallery" class="fancybox" id="@t.TransactionHash"></a>
+                        <div class="card-block">
+                            <h4 class="card-title text-center">Blocknumber: @t.BlockNumber.Value.ToString()</h4>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="ImageOverview"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    <a asp-action="ImageOverview"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
+</div>
 
 
-            <script>
+<script>
     $(document).ready(function () {
         displayImage()
         $('.fancybox').fancybox();;
@@ -63,4 +92,4 @@
            </text>
             }
         }
-            </script>
+</script>
